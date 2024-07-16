@@ -20,9 +20,9 @@ public class Base : MonoBehaviour
         _scanner.ResourceFound += OnResourceFound;
     }
 
-    public void AddResources(ResourceType resourceType, int amount)
+    public ResourceManager GetResource()
     {
-        _resourceManager.AddResource(resourceType, amount);
+        return _resourceManager;
     }
 
     private void OnResourceFound(Resource resource)

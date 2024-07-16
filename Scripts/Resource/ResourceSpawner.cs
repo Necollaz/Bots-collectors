@@ -6,10 +6,7 @@ public class ResourceSpawner : MonoBehaviour
     [SerializeField] private float _delay;
     [SerializeField] private float _radius;
     [SerializeField] private int _amount;
-    [SerializeField] private int _minResourceAmount = 1;
-    [SerializeField] private int _maxResourceAmount = 10;
     [SerializeField] private ResourcePool _pool;
-
 
     private void Start()
     {
@@ -32,7 +29,6 @@ public class ResourceSpawner : MonoBehaviour
 
         resource.transform.position = GetRandomPosition();
         resource.transform.rotation = GetRandomRotation();
-        resource.Set(resourceType, Random.Range(_minResourceAmount, _maxResourceAmount));
         resource.OnCollected += Handle;
         return resource;
     }

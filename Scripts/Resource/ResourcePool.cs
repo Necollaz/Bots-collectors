@@ -61,7 +61,7 @@ public class ResourcePool : MonoBehaviour
     {
         GameObject instance = Instantiate(resourceType.Prefab, transform);
         Resource resource = instance.GetComponent<Resource>();
-        resource.Set(resourceType, 0);
+        resource.Set(resourceType);
         resource.transform.SetParent(transform);
         return resource;
     }

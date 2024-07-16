@@ -46,8 +46,11 @@ public class Bot : MonoBehaviour
 
     private void OnBaseReached()
     {
-        _base.AddResources(_resource.GetResourceType(), _resource.GetAmount());
         IsBusy = false;
         _botMovement.OnReachTarget -= OnBaseReached;
+
+        var resourceManager = _base.GetResource();
+        resourceManager.AddResource(_resource.GetResourceType(), _resource.GetAmount());
+        _resource = null;
     }
 }
