@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(BotMovement), typeof(BotPicker))]
 public class Bot : MonoBehaviour
 {
-    [SerializeField] private Transform _base;
+    [SerializeField] private Base _base;
 
     private BotMovement _botMovement;
     private BotPicker _botPicker;
@@ -39,18 +39,14 @@ public class Bot : MonoBehaviour
         {
             _resource.Collect();
 
-            _botMovement.SetTarget(_base);
+            _botMovement.SetTarget(_base.transform);
             _botMovement.OnReachTarget += OnBaseReached;
         }
     }
 
     private void OnBaseReached()
     {
-        if(_base.TryGetComponent(out Base baseComponent))
-        {
-            baseComponent.AddResources(_resource.GetResourceType(), _resource.GetAmount());
-        }
-
+        _base.AddResources(_resource.GetResourceType(), _resource.GetAmount());
         IsBusy = false;
         _botMovement.OnReachTarget -= OnBaseReached;
     }
