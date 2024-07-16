@@ -4,48 +4,34 @@ using UnityEngine;
 
 public class ResourceManager : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI[] _uiElements;
-    [SerializeField] private ResourceType[] _resourceTypes;
+    [SerializeField] private TextMeshProUGUI _text;
 
-    private Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
-
-    private void Awake()
-    {
-        Initialize();
-    }
+    private Dictionary<ResourceType, int> _resourceCounts = new Dictionary<ResourceType, int>();
 
     private void Start()
     {
-        UpdateUI();
+        UpdateResourceText();
     }
 
-    public void AddResource(ResourceType type, int amount)
+    public void AddResource(ResourceType resourceType, int amount)
     {
-        if (_resources.ContainsKey(type))
+        if (_resourceCounts.ContainsKey(resourceType))
         {
-            _resources[type] += amount;
-            UpdateUI();
+            _resourceCounts[resourceType] += amount;
         }
-    }
-
-    private void Initialize()
-    {
-        foreach (ResourceType type in _resourceTypes)
+        else
         {
-            _resources[type] = 0;
+            _resourceCounts[resourceType] = amount;
         }
+        UpdateResourceText();
     }
 
-    private void UpdateUI()
+    private void UpdateResourceText()
     {
-        for (int i = 0; i < _resourceTypes.Length; i++)
+        _text.text = "Resources:\n";
+        foreach (var resource in _resourceCounts)
         {
-            ResourceType type = _resourceTypes[i];
-
-            if (i < _uiElements.Length)
-            {
-                _uiElements[i].text = $"{type.ResourceName}: {_resources[type]}";
-            }
+            _text.text += $"{resource.Key}: {resource.Value}\n";
         }
     }
 }
