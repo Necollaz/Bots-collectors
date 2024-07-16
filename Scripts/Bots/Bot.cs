@@ -1,4 +1,3 @@
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 [RequireComponent(typeof(BotMovement), typeof(BotPicker))]
@@ -21,7 +20,7 @@ public class Bot : MonoBehaviour
 
     private void Update()
     {
-        PerformCollectionCheck();
+        ReturnBase();
     }
 
     public void SetTargetResource(Resource resource)
@@ -34,24 +33,15 @@ public class Bot : MonoBehaviour
         _botMovement.SetTarget(resource.transform);
     }
 
-    private void PerformCollectionCheck()
+    private void ReturnBase()
     {
         if (IsBusy && _resource != null && Vector3.Distance(transform.position, _resource.transform.position) < 0.1f)
         {
-            CollectResource();
+            _resource.Collect();
+
+            _botMovement.SetTarget(_base);
+            _botMovement.OnReachTarget += OnBaseReached;
         }
-    }
-
-    private void CollectResource()
-    {
-        _resource.Collect();
-        ReturnBase();
-    }
-
-    private void ReturnBase()
-    {
-        _botMovement.SetTarget(_base);
-        _botMovement.OnReachTarget += OnBaseReached;
     }
 
     private void OnBaseReached()
@@ -61,7 +51,6 @@ public class Bot : MonoBehaviour
             baseComponent.AddResources(_resource.GetResourceType(), _resource.GetAmount());
         }
 
-        _resource = null;
         IsBusy = false;
         _botMovement.OnReachTarget -= OnBaseReached;
     }

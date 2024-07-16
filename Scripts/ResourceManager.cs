@@ -9,13 +9,9 @@ public class ResourceManager : MonoBehaviour
 
     private Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
 
-    private void Awake()
+    private void OnEnable()
     {
         Initialize();
-    }
-
-    private void Start()
-    {
         UpdateUI();
     }
 
