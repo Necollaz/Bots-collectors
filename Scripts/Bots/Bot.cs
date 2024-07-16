@@ -15,7 +15,7 @@ public class Bot : MonoBehaviour
     {
         _botMovement = GetComponent<BotMovement>();
         _botPicker = GetComponent<BotPicker>();
-        _botPicker.Discovered += OnResourceDiscovered;
+        _botPicker.Discovered += SetTargetResource;
     }
 
     private void Update()
@@ -26,13 +26,7 @@ public class Bot : MonoBehaviour
         }
     }
 
-    public void SetTargetResource(Resource resource, Transform baseTransform)
-    {
-        _base = baseTransform;
-        OnResourceDiscovered(resource);
-    }
-
-    private void OnResourceDiscovered(Resource resource)
+    public void SetTargetResource(Resource resource)
     {
         if (IsBusy || resource.IsCollected) return;
 
@@ -45,7 +39,23 @@ public class Bot : MonoBehaviour
     private void CollectResource()
     {
         _resource.Collect();
+        ReturnBase();
+    }
+
+    private void ReturnBase()
+    {
         _botMovement.SetTarget(_base);
-        _resource = null;
+        _botMovement.OnReachTarget += OnBaseReached;
+    }
+
+    private void OnBaseReached()
+    {
+        if(_base.TryGetComponent(out Base baseComponent))
+        {
+            baseComponent.AddResources(_resource.GetResourceType(), _resource.GetAmount());
+        }
+
+        IsBusy = false;
+        _botMovement.OnReachTarget -= OnBaseReached;
     }
 }

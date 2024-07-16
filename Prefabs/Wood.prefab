@@ -169,5 +169,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85108b035ee2b4940a48c750a45d16c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _resourceMaterial: {fileID: 11400000, guid: b4f6bcba040db4caf857538f33d3bd17, type: 2}
+  _resourceType: {fileID: 11400000, guid: b4f6bcba040db4caf857538f33d3bd17, type: 2}
   _amount: 1
+  IsCollected: 0

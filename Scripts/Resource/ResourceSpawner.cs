@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class ResourceSpawner : MonoBehaviour
 {
-    [SerializeField] private int _amount;
     [SerializeField] private float _delay;
     [SerializeField] private float _radius;
+    [SerializeField] private int _amount;
+    [SerializeField] private int _minResourceAmount = 1;
+    [SerializeField] private int _maxResourceAmount = 10;
     [SerializeField] private ResourcePool _pool;
 
-    private int _minValueResources = 1;
-    private int _maxValueResources = 10;
 
     private void Start()
     {
@@ -20,19 +20,26 @@ public class ResourceSpawner : MonoBehaviour
     {
         for (int i = 0; i < _amount; i++)
         {
-            ResourceType resourceType = _pool.GetRandomResourceType();
-            Resource resource = _pool.Get(resourceType);
-            resource.OnCollected += HandleResourceCollected;
-            resource.transform.rotation = GetRandomRotation();
-            resource.transform.position = GetRandomPosition();
-            resource.Set(resourceType, Random.Range(_minValueResources, _maxValueResources));
+            Create();
             yield return new WaitForSeconds(_delay);
         }
     }
 
-    private void HandleResourceCollected(Resource resource)
+    private Resource Create()
     {
-        resource.OnCollected -= HandleResourceCollected;
+        ResourceType resourceType = _pool.GetRandomResourceType();
+        Resource resource = _pool.Get(resourceType);
+
+        resource.transform.position = GetRandomPosition();
+        resource.transform.rotation = GetRandomRotation();
+        resource.Set(resourceType, Random.Range(_minResourceAmount, _maxResourceAmount));
+        resource.OnCollected += Handle;
+        return resource;
+    }
+
+    private void Handle(Resource resource)
+    {
+        resource.OnCollected -= Handle;
         _pool.Release(resource);
     }
 

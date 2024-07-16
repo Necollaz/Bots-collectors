@@ -23,8 +23,7 @@ public class ResourcePool : MonoBehaviour
         }
         else
         {
-            Resource resource = CreateInstance(resourceType, transform);
-            return resource;
+            return CreateInstance(resourceType);
         }
     }
 
@@ -49,20 +48,21 @@ public class ResourcePool : MonoBehaviour
 
             for (int i = 0; i < _poolSize; i++)
             {
-                Resource resource = CreateInstance(resourceType, transform);
+                Resource resource = CreateInstance(resourceType);
                 resource.gameObject.SetActive(false);
                 pool.Enqueue(resource);
             }
-            _pools.Add(resourceType, pool);
+
+            _pools[resourceType] = pool;
         }
     }
 
-    private Resource CreateInstance(ResourceType resourceMaterial, Transform parent)
+    private Resource CreateInstance(ResourceType resourceType)
     {
-        GameObject instance = Instantiate(resourceMaterial.Prefab, parent);
+        GameObject instance = Instantiate(resourceType.Prefab, transform);
         Resource resource = instance.GetComponent<Resource>();
-        resource.Set(resourceMaterial, 0);
-        resource.transform.SetParent(parent);
+        resource.Set(resourceType, 0);
+        resource.transform.SetParent(transform);
         return resource;
     }
 }

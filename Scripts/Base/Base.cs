@@ -1,21 +1,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(ResourceManager), typeof(ResourceScanner))]
 public class Base : MonoBehaviour
 {
     [SerializeField] private List<Bot> _bots;
-    [SerializeField] private ResourceScanner _scanner;
 
-    private Transform _transform;
+    private ResourceScanner _scanner;
+    private ResourceManager _resourceManager;
 
     private void Awake()
     {
-        _transform = transform;
+        _scanner = GetComponent<ResourceScanner>();
+        _resourceManager = GetComponent<ResourceManager>();
     }
 
     private void Start()
     {
         _scanner.ResourceFound += OnResourceFound;
+    }
+
+    public void AddResources(ResourceType resourceType, int amount)
+    {
+        _resourceManager.AddResource(resourceType, amount);
     }
 
     private void OnResourceFound(Resource resource)
@@ -24,7 +31,7 @@ public class Base : MonoBehaviour
         {
             if (!bot.IsBusy)
             {
-                bot.SetTargetResource(resource, _transform);
+                bot.SetTargetResource(resource);
                 break;
             }
         }

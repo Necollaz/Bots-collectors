@@ -1,31 +1,35 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class ResourceScanner : MonoBehaviour
 {
     [SerializeField] private float _scanRadius;
+    [SerializeField] private float _delay;
 
     public event Action<Resource> ResourceFound;
 
-    private void Update()
+    private void Start()
     {
-        Resource resource = ScanForResources();
-
-        if (resource != null)
-            ResourceFound?.Invoke(resource);
+        StartCoroutine(Scan());
     }
 
-    public Resource ScanForResources()
+    private IEnumerator Scan()
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
-
-        foreach (var hit in hits)
+        while (true)
         {
-            if (hit.TryGetComponent(out Resource resource) && !resource.IsCollected)
+            Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
+
+            foreach (Collider hit in hits)
             {
-                return resource;
+                if(hit.TryGetComponent(out Resource resource) && !resource.IsCollected)
+                {
+                    ResourceFound?.Invoke(resource);
+                    break;
+                }
             }
+
+            yield return new WaitForSeconds(_delay);
         }
-        return null;
     }
 }
