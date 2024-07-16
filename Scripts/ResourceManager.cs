@@ -9,13 +9,13 @@ public class ResourceManager : MonoBehaviour
 
     private Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
 
+    private void Awake()
+    {
+        Initialize();
+    }
+
     private void Start()
     {
-        foreach (ResourceType type in _resourceTypes)
-        {
-            _resources[type] = 0;
-        }
-
         UpdateUI();
     }
 
@@ -25,6 +25,14 @@ public class ResourceManager : MonoBehaviour
         {
             _resources[type] += amount;
             UpdateUI();
+        }
+    }
+
+    private void Initialize()
+    {
+        foreach (ResourceType type in _resourceTypes)
+        {
+            _resources[type] = 0;
         }
     }
 

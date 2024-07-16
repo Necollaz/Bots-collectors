@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 5960187411246632321}
   - component: {fileID: -8478562774366008011}
   - component: {fileID: 567836083850944128}
-  - component: {fileID: -4584757697765000852}
   m_Layer: 0
   m_Name: Food
   m_TagString: Untagged
@@ -151,24 +150,3 @@ MonoBehaviour:
   _resourceType: {fileID: 11400000, guid: aba7aff04005d469e99d19b3f845258d, type: 2}
   _amount: 1
   IsCollected: 0
---- !u!65 &-4584757697765000852
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7451786841684783721}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.45981598, y: 0.04043288, z: 0.29153767}
-  m_Center: {x: 0.004028484, y: 0.021826347, z: 0.008569971}
