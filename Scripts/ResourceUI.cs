@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ResourceManager : MonoBehaviour
+public class ResourceUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
 
