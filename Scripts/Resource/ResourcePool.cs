@@ -34,7 +34,6 @@ public class ResourcePool : MonoBehaviour
 
     public void Release(Resource resource)
     {
-        resource.Reset();
         _pools[resource.GetResourceType()].Enqueue(resource);
     }
 

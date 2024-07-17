@@ -6,7 +6,7 @@ public class ResourceManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _text;
 
-    private Dictionary<ResourceType, int> _resourceCounts = new Dictionary<ResourceType, int>();
+    private Dictionary<ResourceType, int> _resources = new Dictionary<ResourceType, int>();
 
     private void Start()
     {
@@ -15,23 +15,20 @@ public class ResourceManager : MonoBehaviour
 
     public void AddResource(ResourceType resourceType, int amount)
     {
-        if (_resourceCounts.ContainsKey(resourceType))
-        {
-            _resourceCounts[resourceType] += amount;
-        }
+        if (_resources.ContainsKey(resourceType))
+            _resources[resourceType] += amount;
         else
-        {
-            _resourceCounts[resourceType] = amount;
-        }
+            _resources[resourceType] = amount;
+
         UpdateResourceText();
     }
 
     private void UpdateResourceText()
     {
-        _text.text = "Resources:\n";
-        foreach (var resource in _resourceCounts)
+        _text.text = "Ресурсы:\n";
+        foreach (var resource in _resources)
         {
-            _text.text += $"{resource.Key}: {resource.Value}\n";
+            _text.text += $"{resource.Key.ResourceName}: {resource.Value}\n";
         }
     }
 }

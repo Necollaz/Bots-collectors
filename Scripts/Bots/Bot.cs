@@ -38,7 +38,6 @@ public class Bot : MonoBehaviour
         if (IsBusy && _resource != null && Vector3.Distance(transform.position, _resource.transform.position) < 0.1f)
         {
             _resource.Collect();
-
             _botMovement.SetTarget(_base.transform);
             _botMovement.OnReachTarget += OnBaseReached;
         }
@@ -51,7 +50,6 @@ public class Bot : MonoBehaviour
             _base.AddResource(_resource.GetResourceType(), _resource.GetAmount());
             IsBusy = false;
             _botMovement.OnReachTarget -= OnBaseReached;
-
         }
     }
 }

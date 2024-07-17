@@ -13,13 +13,6 @@ public class Resource : MonoBehaviour
 
     public event Action<Resource> OnCollected;
 
-    public void Initialize()
-    {
-        _amount = Random.Range(_minAmount, _maxAmount);
-        IsCollected = false;
-        gameObject.SetActive(true);
-    }
-
     public void Set(ResourceType resourceType)
     {
         _resourceType = resourceType;
@@ -36,13 +29,6 @@ public class Resource : MonoBehaviour
         IsCollected = true;
         OnCollected?.Invoke(this);
         gameObject.SetActive(false);
-    }
-
-    public void Reset()
-    {
-        _amount = 0;
-        IsCollected = false;
-        gameObject.SetActive(true);
     }
 
     public int GetAmount()

@@ -6,6 +6,7 @@ public class ResourceScanner : MonoBehaviour
 {
     [SerializeField] private float _scanRadius;
     [SerializeField] private float _delay;
+    [SerializeField] private ParticleSystem _particleEffect;
 
     public event Action<Resource> ResourceFound;
 
@@ -25,6 +26,7 @@ public class ResourceScanner : MonoBehaviour
                 if(hit.TryGetComponent(out Resource resource) && !resource.IsCollected)
                 {
                     ResourceFound?.Invoke(resource);
+                    _particleEffect.Play();
                     break;
                 }
             }
