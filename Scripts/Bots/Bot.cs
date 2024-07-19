@@ -4,52 +4,63 @@ using UnityEngine;
 public class Bot : MonoBehaviour
 {
     [SerializeField] private Base _base;
+    [SerializeField] private ResourcePool _resourcePool;
 
     private BotMovement _botMovement;
     private BotPicker _botPicker;
     private Resource _resource;
-        
+
     public bool IsBusy { get; private set; }
 
     private void Awake()
     {
         _botMovement = GetComponent<BotMovement>();
         _botPicker = GetComponent<BotPicker>();
-        _botPicker.Discovered += SetTargetResource;
+        _botPicker.Discovered += SetTarget;
     }
 
     private void Update()
     {
-        ReturnBase();
+        PickUpResource();
     }
 
-    public void SetTargetResource(Resource resource)
+    public void SetTarget(Resource resource)
     {
-        if (IsBusy || resource.IsCollected) return;
+        if (!IsBusy && resource != null)
+        {
+            IsBusy = true;
+            _resource = resource;
+            _botMovement.SetTarget(resource.transform);
+            Debug.Log($"Бот {name} установил целью ресурс {resource.name}");
+        }
+    }
 
-        IsBusy = true;
-        _resource = resource;
-        _resource.IsCollected = true;
-        _botMovement.SetTarget(resource.transform);
+    private void PickUpResource()
+    {
+        if (IsBusy && _resource != null && Vector3.Distance(transform.position, _resource.transform.position) < 0.1f)
+        {
+            _resource.transform.SetParent(transform);
+            _resource.transform.localPosition = Vector3.zero;
+            _botMovement.SetTarget(_base.transform);
+            _botMovement.OnReachTarget += ReturnBase;
+            Debug.Log($"Бот {name} подобрал ресурс {_resource.name} и направился на базу");
+
+        }
     }
 
     private void ReturnBase()
     {
-        if (IsBusy && _resource != null && Vector3.Distance(transform.position, _resource.transform.position) < 0.1f)
+        if (_resource != null)
         {
-            _resource.Collect();
-            _botMovement.SetTarget(_base.transform);
-            _botMovement.OnReachTarget += OnBaseReached;
-        }
-    }
+            Debug.Log($"Бот {name} возвращается на базу с ресурсом {_resource.name}");
 
-    private void OnBaseReached()
-    {
-        if(_resource != null)
-        {
-            _base.AddResource(_resource.GetResourceType(), _resource.GetAmount());
+            _base.Add(_resource.GetResourceType(), _resource.GetAmount());
             IsBusy = false;
-            _botMovement.OnReachTarget -= OnBaseReached;
+            _resourcePool.Return(_resource);
+            _resource.gameObject.SetActive(false);
+            _botMovement.OnReachTarget -= ReturnBase;
+            Debug.Log($"Бот {name} доставил ресурс бесплатно.");
+
         }
     }
 }

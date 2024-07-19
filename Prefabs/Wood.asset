@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0449409164c79445eade38dc9f7c16da, type: 3}
   m_Name: Wood
   m_EditorClassIdentifier: 
-  ResourceName: 
-  Prefab: {fileID: 0}
+  ResourceName: Wood
+  Prefab: {fileID: 3356094061520227758, guid: c10b519c60f114992a2f77d38ee41eb1, type: 3}

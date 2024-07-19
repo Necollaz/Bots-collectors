@@ -32,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11.330767, y: -0.0028953839, z: 2.7541378}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 2, y: 2, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -170,5 +170,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resourceType: {fileID: 11400000, guid: b89d3163e296041e393a8a681b0b07b0, type: 2}
-  _amount: 1
+  _minAmount: 1
+  _maxAmount: 10
   IsCollected: 0

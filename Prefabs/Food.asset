@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0449409164c79445eade38dc9f7c16da, type: 3}
   m_Name: Food
   m_EditorClassIdentifier: 
-  ResourceName: 
-  Prefab: {fileID: 0}
+  ResourceName: Food
+  Prefab: {fileID: 7451786841684783721, guid: 770dcae4549f04b548346eab79a6af8d, type: 3}

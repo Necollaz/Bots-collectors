@@ -15,10 +15,12 @@ public class ResourceSpawner : MonoBehaviour
 
     private IEnumerator Spawn()
     {
+        WaitForSeconds wait = new WaitForSeconds(_delay);
+
         for (int i = 0; i < _amount; i++)
         {
             Create();
-            yield return new WaitForSeconds(_delay);
+            yield return wait;
         }
     }
 
@@ -29,14 +31,7 @@ public class ResourceSpawner : MonoBehaviour
 
         resource.transform.position = GetRandomPosition();
         resource.transform.rotation = GetRandomRotation();
-        resource.OnCollected += Handle;
         return resource;
-    }
-
-    private void Handle(Resource resource)
-    {
-        resource.OnCollected -= Handle;
-        _pool.Release(resource);
     }
 
     private Vector3 GetRandomPosition()

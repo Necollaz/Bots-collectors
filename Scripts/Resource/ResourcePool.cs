@@ -4,7 +4,7 @@ using UnityEngine;
 public class ResourcePool : MonoBehaviour
 {
     [SerializeField] private ResourceType[] _resourceTypes;
-    [SerializeField] private int _poolSize;
+    [SerializeField] private int _initialPoolSize = 10;
 
     private Dictionary<ResourceType, Queue<Resource>> _pools;
 
@@ -27,14 +27,22 @@ public class ResourcePool : MonoBehaviour
         }
     }
 
-    public ResourceType GetRandomResourceType()
-    {
-        return _resourceTypes[Random.Range(0, _resourceTypes.Length)];
-    }
+    public ResourceType GetRandomResourceType() => _resourceTypes[Random.Range(0, _resourceTypes.Length)];
 
     public void Release(Resource resource)
     {
-        _pools[resource.GetResourceType()].Enqueue(resource);
+        Return(resource);
+    }
+
+    public void Return(Resource resource)
+    {
+        ResourceType resourceType = resource.GetResourceType();
+
+        if (_pools.TryGetValue(resourceType, out Queue<Resource> pool))
+        {
+            resource.gameObject.SetActive(false);
+            pool.Enqueue(resource);
+        }
     }
 
     private void InitializePools()
@@ -45,7 +53,7 @@ public class ResourcePool : MonoBehaviour
         {
             Queue<Resource> pool = new Queue<Resource>();
 
-            for (int i = 0; i < _poolSize; i++)
+            for (int i = 0; i < _initialPoolSize; i++)
             {
                 Resource resource = CreateInstance(resourceType);
                 resource.gameObject.SetActive(false);
@@ -59,9 +67,17 @@ public class ResourcePool : MonoBehaviour
     private Resource CreateInstance(ResourceType resourceType)
     {
         GameObject instance = Instantiate(resourceType.Prefab, transform);
-        Resource resource = instance.GetComponent<Resource>();
-        resource.Set(resourceType);
-        resource.transform.SetParent(transform);
-        return resource;
+
+        if (instance.TryGetComponent(out Resource resource))
+        {
+            resource.Set(resourceType);
+            resource.transform.SetParent(transform);
+            return resource;
+        }
+        else
+        {
+            Destroy(instance);
+            return null;
+        }
     }
 }

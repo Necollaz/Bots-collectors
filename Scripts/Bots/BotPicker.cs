@@ -7,7 +7,7 @@ public class BotPicker : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out Resource resource) && !resource.IsCollected)
+        if(other.TryGetComponent(out Resource resource))
         {
             Discovered?.Invoke(resource);
         }

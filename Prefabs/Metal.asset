@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0449409164c79445eade38dc9f7c16da, type: 3}
   m_Name: Metal
   m_EditorClassIdentifier: 
-  ResourceName: 
-  Prefab: {fileID: 0}
+  ResourceName: Metal
+  Prefab: {fileID: 6773002513219037064, guid: dfb25e1bd23bb49efa378e477e54b041, type: 3}
