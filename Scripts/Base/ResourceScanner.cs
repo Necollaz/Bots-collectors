@@ -17,15 +17,13 @@ public class ResourceScanner : MonoBehaviour
 
     private IEnumerator Scan()
     {
-        WaitForSeconds wait = new WaitForSeconds(_delay);
-
         while (true)
         {
             Collider[] hits = Physics.OverlapSphere(transform.position, _scanRadius);
 
             foreach (Collider hit in hits)
             {
-                if(hit.TryGetComponent(out Resource resource))
+                if(hit.TryGetComponent(out Resource resource) && !resource.IsCollected)
                 {
                     ResourceFound?.Invoke(resource);
                     _particleEffect.Play();
@@ -33,7 +31,7 @@ public class ResourceScanner : MonoBehaviour
                 }
             }
 
-            yield return wait;
+            yield return new WaitForSeconds(_delay);
         }
     }
 }

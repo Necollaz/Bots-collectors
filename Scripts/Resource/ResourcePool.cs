@@ -4,7 +4,7 @@ using UnityEngine;
 public class ResourcePool : MonoBehaviour
 {
     [SerializeField] private ResourceType[] _resourceTypes;
-    [SerializeField] private int _initialPoolSize = 10;
+    [SerializeField] private int _poolSize;
 
     private Dictionary<ResourceType, Queue<Resource>> _pools;
 
@@ -27,22 +27,14 @@ public class ResourcePool : MonoBehaviour
         }
     }
 
-    public ResourceType GetRandomResourceType() => _resourceTypes[Random.Range(0, _resourceTypes.Length)];
+    public ResourceType GetRandomResourceType()
+    {
+        return _resourceTypes[Random.Range(0, _resourceTypes.Length)];
+    }
 
     public void Release(Resource resource)
     {
-        Return(resource);
-    }
-
-    public void Return(Resource resource)
-    {
-        ResourceType resourceType = resource.GetResourceType();
-
-        if (_pools.TryGetValue(resourceType, out Queue<Resource> pool))
-        {
-            resource.gameObject.SetActive(false);
-            pool.Enqueue(resource);
-        }
+        _pools[resource.GetResourceType()].Enqueue(resource);
     }
 
     private void InitializePools()
@@ -53,7 +45,7 @@ public class ResourcePool : MonoBehaviour
         {
             Queue<Resource> pool = new Queue<Resource>();
 
-            for (int i = 0; i < _initialPoolSize; i++)
+            for (int i = 0; i < _poolSize; i++)
             {
                 Resource resource = CreateInstance(resourceType);
                 resource.gameObject.SetActive(false);
@@ -67,17 +59,9 @@ public class ResourcePool : MonoBehaviour
     private Resource CreateInstance(ResourceType resourceType)
     {
         GameObject instance = Instantiate(resourceType.Prefab, transform);
-
-        if (instance.TryGetComponent(out Resource resource))
-        {
-            resource.Set(resourceType);
-            resource.transform.SetParent(transform);
-            return resource;
-        }
-        else
-        {
-            Destroy(instance);
-            return null;
-        }
+        Resource resource = instance.GetComponent<Resource>();
+        resource.Set(resourceType);
+        resource.transform.SetParent(transform);
+        return resource;
     }
 }
