@@ -1,39 +1,73 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ResourceUI), typeof(ResourceScanner))]
+[RequireComponent(typeof(ResourceScanner))]
 public class Base : MonoBehaviour
 {
     [SerializeField] private List<Bot> _bots;
 
     private ResourceScanner _scanner;
-    private ResourceUI _resourceUI;
+    private Dictionary<ResourceType, int> _resources;
+    private HashSet<Resource> _reservedResources;
+
+    public event Action OnResourceChanged;
 
     private void Awake()
     {
+        _resources = new Dictionary<ResourceType, int>();
+        _reservedResources = new HashSet<Resource>();
         _scanner = GetComponent<ResourceScanner>();
-        _resourceUI = GetComponent<ResourceUI>();
+        _scanner.ResourceFound += Found;
     }
 
-    private void Start()
+    public Dictionary<ResourceType, int> GetResources() => new Dictionary<ResourceType, int>(_resources);
+
+    public void ReleaseResource(Resource resource)
     {
-        _scanner.ResourceFound += OnResourceFound;
+        _reservedResources.Remove(resource);
     }
 
-    public void AddResource(ResourceType resourceType, int amount)
+    public void TryAssign(Bot bot)
     {
-        _resourceUI.AddResource(resourceType, amount);
+        foreach (var resource in _scanner.GetAvailableResources())
+        {
+            if (!_reservedResources.Contains(resource))
+            {
+                Assign(bot, resource);
+                break;
+            }
+        }
     }
 
-    private void OnResourceFound(Resource resource)
+    public void Add(ResourceType resourceType, int amount)
     {
+        if (_resources.ContainsKey(resourceType))
+            _resources[resourceType] += amount;
+        else
+            _resources[resourceType] = amount;
+
+        OnResourceChanged?.Invoke();
+    }
+
+    private void Found(Resource resource)
+    {
+        if (_reservedResources.Contains(resource)) return;
+
         foreach (var bot in _bots)
         {
             if (!bot.IsBusy)
             {
-                bot.SetTargetResource(resource);
+                bot.SetTarget(resource);
+                _reservedResources.Add(resource);
                 break;
             }
         }
+    }
+
+    private void Assign(Bot bot, Resource resource)
+    {
+        bot.SetTarget(resource);
+        _reservedResources.Add(resource);
     }
 }
